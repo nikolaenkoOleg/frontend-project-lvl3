@@ -1,3 +1,9 @@
-import init from './init';
+function component() {
+  const element = document.createElement('div');
 
-init();
+  element.innerHTML = '<h1>Hello</h1>';
+
+  return element;
+}
+
+document.body.appendChild(component());
