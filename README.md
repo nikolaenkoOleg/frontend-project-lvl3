@@ -22,4 +22,4 @@ make develop
 ```
 
 ### URL
-```https://frontend-project-lvl3-one.now.sh/```
+https://frontend-project-lvl3-one.now.sh/
