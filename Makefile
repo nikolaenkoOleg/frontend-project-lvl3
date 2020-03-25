@@ -1,4 +1,4 @@
-install: install-deps install-flow-typed
+install: install-deps
 
 watch:
 	npx webpack-dev-server
@@ -15,4 +15,3 @@ lint:
 
 publish:
 	npm publish
-
