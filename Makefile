@@ -4,7 +4,7 @@ watch:
 	npx webpack-dev-server
 
 install-deps:
-	npm install
+	npm ci
 
 build:
 	rm -rf dist
