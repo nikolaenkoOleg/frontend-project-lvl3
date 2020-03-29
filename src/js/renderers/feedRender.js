@@ -1,0 +1,26 @@
+import parseRss from '../rssParser';
+
+export default (rss) => {
+  const feedList = document.querySelector('.feed-list');
+  const { rssTitle, rssDescription } = parseRss(rss);
+
+  const feedItem = document.createElement('a');
+  const isActiveItem = feedList.children.length === 0 ? 'active' : 'inactive';
+  feedItem.classList.add('list-group-item', 'list-group-item-action', isActiveItem);
+
+  const titleBlock = document.createElement('div');
+  titleBlock.classList.add('d-flex', 'w-100', 'justify-content-between');
+
+  const feedTitle = document.createElement('h5');
+  feedTitle.classList.add('mb-1');
+  feedTitle.textContent = rssTitle;
+
+  const feedDescription = document.createElement('p');
+  feedDescription.classList.add('mb-1');
+  feedDescription.textContent = rssDescription;
+
+  titleBlock.append(feedTitle);
+  feedItem.append(titleBlock);
+  feedItem.append(feedDescription);
+  feedList.append(feedItem);
+};
