@@ -1,30 +1,44 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import axios from 'axios';
-import renderFeed from './renderFeed';
 import isValid from './urlValidator';
+import {
+  watchUrl,
+  watchSubmit,
+  watchData,
+  watchErrors,
+} from './watchers';
 
 const form = document.querySelector('form');
-const input = document.querySelector('input[type="text"]');
-const submit = document.querySelector('button[type="submit"]');
-const errorBlock = document.querySelector('.error_block');
-const feedsList = document.querySelector('.feeds-list > .list-group');
+const input = document.querySelector('#input-url');
 
 const state = {
   isValidUrl: true,
-  submitDisabled: true,
+  urlPool: [],
+  submitDisabled: false,
+  errors: {
+    validationError: null,
+    requestError: null,
+  },
   rssData: null,
+  processingRequest: false,
 };
 
 input.addEventListener('input', () => {
   state.isValidUrl = false;
-  const { value } = input;
+  const url = input.value;
 
-  isValid(value)
-    .then((valid) => {
+  isValid(url, state.urlPool)
+    .then(({ valid, message }) => {
       if (valid) {
         state.isValidUrl = true;
+        state.errors.validationError = message;
+        state.submitDisabled = false;
       } else {
         state.isValidUrl = false;
+        state.errors.validationError = message;
+        state.submitDisabled = true;
+        console.log(state);
       }
     });
 });
@@ -32,6 +46,7 @@ input.addEventListener('input', () => {
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const url = input.value;
+  state.processingRequest = true;
 
   axios.get(url)
     .then((response) => response.data)
@@ -41,18 +56,21 @@ form.addEventListener('submit', (e) => {
     })
     .then((str) => {
       state.rssData = str;
-      console.log(state);
+      input.value = '';
+      state.processingRequest = false;
+      state.urlPool.push(url);
     })
     .catch((error) => {
-      const errorContent = document.createElement('p');
-      errorContent.style.textAlign = 'center';
-      errorContent.style.margin = 0;
-      errorContent.textContent = `Ups... we have ${error}`;
-
-      errorBlock.append(errorContent);
-      errorBlock.style.display = 'block';
+      input.value = '';
+      state.errors.requestError = error;
+      state.processingRequest = false;
     });
 });
+
+watchUrl(state);
+watchData(state);
+watchSubmit(state);
+watchErrors(state);
 
 // https://cors-anywhere.herokuapp.com/rss.cnn.com/rss/cnn_topstories.rss
 // https://cors-anywhere.herokuapp.com/lorem-rss.herokuapp.com/feed
