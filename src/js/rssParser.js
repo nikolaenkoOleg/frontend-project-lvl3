@@ -1,6 +1,28 @@
 export default (rss) => {
-  const rssTitle = rss.querySelector('title').textContent;
-  const rssDescription = rss.querySelector('description').textContent;
+  const name = rss.querySelector('title').textContent;
+  const description = rss.querySelector('description').textContent;
+  const posts = rss.querySelectorAll('item');
 
-  return { rssTitle, rssDescription };
+  const postsLinlks = [];
+  posts.forEach((post) => {
+    postsLinlks.push(post.querySelector('link').textContent);
+  });
+  const postsTitles = [];
+  posts.forEach((post) => {
+    postsTitles.push(post.querySelector('title').textContent);
+  });
+
+  console.log({
+    name,
+    description,
+    feedPostsUrls: postsLinlks,
+    feedTitles: postsTitles,
+  });
+
+  return {
+    name,
+    description,
+    feedPostsUrls: postsLinlks,
+    feedTitles: postsTitles,
+  };
 };

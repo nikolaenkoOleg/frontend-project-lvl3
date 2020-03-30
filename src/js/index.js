@@ -59,6 +59,8 @@ form.addEventListener('submit', (e) => {
       input.value = '';
       state.processingRequest = false;
       state.urlPool.push(url);
+
+      console.log(str);
     })
     .catch((error) => {
       input.value = '';

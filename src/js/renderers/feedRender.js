@@ -2,7 +2,7 @@ import parseRss from '../rssParser';
 
 export default (rss) => {
   const feedList = document.querySelector('.feed-list');
-  const { rssTitle, rssDescription } = parseRss(rss);
+  const { name, description } = parseRss(rss);
 
   const feedItem = document.createElement('a');
   const isActiveItem = feedList.children.length === 0 ? 'active' : 'inactive';
@@ -13,11 +13,11 @@ export default (rss) => {
 
   const feedTitle = document.createElement('h5');
   feedTitle.classList.add('mb-1');
-  feedTitle.textContent = rssTitle;
+  feedTitle.textContent = name;
 
   const feedDescription = document.createElement('p');
   feedDescription.classList.add('mb-1');
-  feedDescription.textContent = rssDescription;
+  feedDescription.textContent = description;
 
   titleBlock.append(feedTitle);
   feedItem.append(titleBlock);
