@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/style.css';
 
 import axios from 'axios';
 import isValid from './urlValidator';
@@ -73,4 +72,5 @@ watchSubmit(state);
 watchErrors(state);
 
 // https://cors-anywhere.herokuapp.com/rss.cnn.com/rss/cnn_topstories.rss
-// https://cors-anywhere.herokuapp.com/lorem-rss.herokuapp.com/feed
+// https://cors-anywhere.herokuapp.com/lorem-rss.herokuapp.com/feed?unit=second&interval=30
+// https://cors-anywhere.herokuapp.com/lorem-rss.herokuapp.com/feed?unit=minute&interval=30
