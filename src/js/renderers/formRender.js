@@ -16,11 +16,11 @@ export default (state, key) => {
     case 'request':
       if (state.processingRequest === true) {
         submit.disabled = true;
-        submitText.textContent = 'Loading'
-        submitSpinner.style.display = 'block';
+        submitText.textContent = 'Loading';
+        submitSpinner.removeAttribute('style');
       } else {
         submit.disabled = false;
-        submitText.textContent = 'Submit'
+        submitText.textContent = 'Submit';
         submitSpinner.style.display = 'none';
       }
 

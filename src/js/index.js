@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/style.css';
 
 import axios from 'axios';
 import isValid from './urlValidator';
