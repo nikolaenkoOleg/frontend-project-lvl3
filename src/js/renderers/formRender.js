@@ -1,6 +1,8 @@
 export default (state, key) => {
   const input = document.querySelector('input[type="text"]');
   const submit = document.querySelector('button[type="submit"]');
+  const submitText = document.querySelector('.button-text');
+  const submitSpinner = document.querySelector('.button-spinner');
 
   switch (key) {
     case 'submit':
@@ -14,8 +16,12 @@ export default (state, key) => {
     case 'request':
       if (state.processingRequest === true) {
         submit.disabled = true;
+        submitText.textContent = 'Loading'
+        submitSpinner.style.display = 'block';
       } else {
         submit.disabled = false;
+        submitText.textContent = 'Submit'
+        submitSpinner.style.display = 'none';
       }
 
       break;
