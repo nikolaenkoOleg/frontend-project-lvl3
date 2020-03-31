@@ -1,6 +1,6 @@
 import { watch } from 'melanke-watchjs';
 import renderForm from './renderers/formRender';
-import renderFeed from './renderers/feedRender';
+import renderContent from './renderers/contentRender';
 import renderError from './renderers/errorsRender';
 
 const watchUrl = (state) => {
@@ -22,7 +22,7 @@ const watchSubmit = (state) => {
 const watchData = (state) => {
   watch(state, 'rssData', () => {
     const { rssData } = state;
-    renderFeed(rssData);
+    renderContent(rssData);
   });
 };
 

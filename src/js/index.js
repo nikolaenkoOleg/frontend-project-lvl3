@@ -38,7 +38,6 @@ input.addEventListener('input', () => {
         state.isValidUrl = false;
         state.errors.validationError = message;
         state.submitDisabled = true;
-        console.log(state);
       }
     });
 });
@@ -59,8 +58,6 @@ form.addEventListener('submit', (e) => {
       input.value = '';
       state.processingRequest = false;
       state.urlPool.push(url);
-
-      console.log(str);
     })
     .catch((error) => {
       input.value = '';
