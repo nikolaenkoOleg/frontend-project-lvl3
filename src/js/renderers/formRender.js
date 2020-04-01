@@ -1,3 +1,5 @@
+import i18next from 'i18next';
+
 export default (state, key) => {
   const input = document.querySelector('input[type="text"]');
   const submit = document.querySelector('button[type="submit"]');
@@ -16,11 +18,11 @@ export default (state, key) => {
     case 'request':
       if (state.processingRequest === true) {
         submit.disabled = true;
-        submitText.textContent = 'Loading';
+        submitText.textContent = i18next.t('button.loading');
         submitSpinner.removeAttribute('style');
       } else {
         submit.disabled = false;
-        submitText.textContent = 'Submit';
+        submitText.textContent = i18next.t('button.submit');
         submitSpinner.style.display = 'none';
       }
 

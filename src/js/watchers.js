@@ -28,11 +28,11 @@ const watchData = (state) => {
 
 const watchErrors = (state) => {
   watch(state.errors, 'validationError', () => {
-    renderError(state.errors, 'validationError');
+    renderError(state, 'validationError');
   });
 
   watch(state.errors, 'requestError', () => {
-    renderError(state.errors, 'requestError');
+    renderError(state, 'requestError');
   });
 };
 

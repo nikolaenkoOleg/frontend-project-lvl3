@@ -8,9 +8,9 @@ export default (url, pool) => {
   if (pool.includes(url)) {
     const promise = new Promise((resolve) => {
       const valid = false;
-      const message = 'urls should not be duplicated!';
+      const key = 'errors.duplicateUrlError';
 
-      resolve({ valid, message });
+      resolve({ valid, key });
     });
 
     return promise;
@@ -22,8 +22,8 @@ export default (url, pool) => {
     })
     .then((valid) => {
       if (valid === false) {
-        const message = 'url is not correct';
-        return { valid, message };
+        const key = 'errors.incorrectUrlError';
+        return { valid, key };
       }
 
       return { valid, message: null };

@@ -3,14 +3,15 @@ import parseRss from '../rssParser';
 export default (rss) => {
   const feedList = document.querySelector('.feed-list');
   const postsList = document.querySelector('.posts');
+  const input = document.querySelector('#input-url');
+  input.value = '';
+
   const {
     name,
     description,
     postsLinks,
     postsTitles,
   } = parseRss(rss);
-
-  console.log(parseRss(rss));
 
   const feedItem = document.createElement('a');
   const isActiveItem = feedList.children.length === 0 ? 'active' : 'inactive';

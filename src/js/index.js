@@ -1,7 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import axios from 'axios';
+import i18next from 'i18next';
+
 import isValid from './urlValidator';
+import en from './locales/en';
 import {
   watchUrl,
   watchSubmit,
@@ -24,19 +27,27 @@ const state = {
   processingRequest: false,
 };
 
+i18next.init({
+  lng: 'en',
+  debug: true,
+  resources: {
+    en,
+  },
+});
+
 input.addEventListener('input', () => {
   state.isValidUrl = false;
   const url = input.value;
 
   isValid(url, state.urlPool)
-    .then(({ valid, message }) => {
+    .then(({ valid, key }) => {
       if (valid) {
         state.isValidUrl = true;
-        state.errors.validationError = message;
+        state.errors.validationError = key;
         state.submitDisabled = false;
       } else {
         state.isValidUrl = false;
-        state.errors.validationError = message;
+        state.errors.validationError = key;
         state.submitDisabled = true;
       }
     });
@@ -55,16 +66,15 @@ form.addEventListener('submit', (e) => {
     })
     .then((str) => {
       state.rssData = str;
-      input.value = '';
       state.processingRequest = false;
       state.urlPool.push(url);
     })
-    .catch((error) => {
-      input.value = '';
-      state.errors.requestError = error;
+    .catch(() => {
+      state.errors.requestError = 'errors.requestError';
       state.processingRequest = false;
     });
 });
+
 
 watchUrl(state);
 watchData(state);

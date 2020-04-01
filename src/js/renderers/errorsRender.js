@@ -1,20 +1,23 @@
-export default (errorState, errorType) => {
+import i18next from 'i18next';
+
+export default (state, errorType) => {
   const requestErrorBlock = document.querySelector('.error_block');
   const requestErrorContent = document.querySelector('.alert-content');
   const validationUrlFeedbackBlock = document.querySelector('.feedback');
+  const input = document.querySelector('#input-url');
 
   const closeBtn = document.querySelector('.close');
   closeBtn.addEventListener('click', (e) => {
     e.preventDefault();
 
     // eslint-disable-next-line no-param-reassign
-    errorState.requestError = null;
+    state.errors.requestError = null;
   });
 
   switch (errorType) {
     case 'validationError':
-      if (errorState.validationError) {
-        validationUrlFeedbackBlock.textContent = `Url is not valid: ${errorState.validationError}`;
+      if (state.errors.validationError) {
+        validationUrlFeedbackBlock.textContent = i18next.t(state.errors.validationError);
         validationUrlFeedbackBlock.style.display = 'block';
         validationUrlFeedbackBlock.classList.add('invalid-feedback');
       } else {
@@ -25,8 +28,9 @@ export default (errorState, errorType) => {
 
       break;
     case 'requestError':
-      if (errorState.requestError) {
-        const errorText = `Ups... we have ${errorState.requestError}. Try again later.`;
+      if (state.errors.requestError) {
+        input.value = '';
+        const errorText = i18next.t(state.errors.requestError);
         requestErrorContent.prepend(errorText);
         requestErrorBlock.style.display = 'block';
       } else {
