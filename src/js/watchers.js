@@ -20,9 +20,8 @@ const watchSubmit = (state) => {
 };
 
 const watchData = (state) => {
-  watch(state, 'rssData', () => {
-    const { rssData } = state;
-    renderContent(rssData);
+  watch(state, 'feeds', () => {
+    renderContent(state);
   });
 };
 
