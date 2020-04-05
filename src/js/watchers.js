@@ -23,6 +23,10 @@ const watchData = (state) => {
   watch(state, 'feeds', () => {
     renderContent(state);
   });
+
+  watch(state, 'posts', () => {
+    renderContent(state);
+  });
 };
 
 const watchErrors = (state) => {
