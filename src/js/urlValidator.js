@@ -27,6 +27,6 @@ export default (url, state) => {
         return { valid, key };
       }
 
-      return { valid, message: null };
+      return { valid, key: null };
     });
 };
