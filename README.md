@@ -21,5 +21,11 @@ make install
 make develop
 ```
 
+### Build
+
+```sh
+make build
+```
+
 ### URL
-https://frontend-project-lvl3-one.now.sh/
+https://rss-loader.now.sh/
