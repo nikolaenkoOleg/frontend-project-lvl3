@@ -3,19 +3,9 @@ import renderForm from './renderers/formRender';
 import renderContent from './renderers/contentRender';
 import renderError from './renderers/errorsRender';
 
-const watchUrl = (state) => {
-  watch(state, 'isValidUrl', () => {
-    renderForm(state, 'url');
-  });
-};
-
-const watchSubmit = (state) => {
-  watch(state, 'processingRequest', () => {
-    renderForm(state, 'request');
-  });
-
-  watch(state, 'submitDisabled', () => {
-    renderForm(state, 'submit');
+const watchForm = (state) => {
+  watch(state.form, 'state', () => {
+    renderForm(state);
   });
 };
 
@@ -30,18 +20,17 @@ const watchData = (state) => {
 };
 
 const watchErrors = (state) => {
-  watch(state.errors, 'validationError', () => {
+  watch(state.form.error, 'validationError', () => {
     renderError(state, 'validationError');
   });
 
-  watch(state.errors, 'requestError', () => {
+  watch(state.form.error, 'requestError', () => {
     renderError(state, 'requestError');
   });
 };
 
 export {
-  watchUrl,
-  watchSubmit,
+  watchForm,
   watchData,
   watchErrors,
 };

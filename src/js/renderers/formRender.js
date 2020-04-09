@@ -1,41 +1,22 @@
 import i18next from 'i18next';
 
-export default (state, key) => {
+export default (state) => {
   const input = document.querySelector('input[type="text"]');
   const submit = document.querySelector('button[type="submit"]');
   const submitText = document.querySelector('.button-text');
   const submitSpinner = document.querySelector('.button-spinner');
 
-  switch (key) {
-    case 'submit':
-      if (state.submitDisabled === true) {
-        submit.disabled = true;
-      } else {
-        submit.disabled = false;
-      }
+  if (state.form.state === 'active') {
+    input.disabled = false;
+    submit.disabled = false;
+    submitText.textContent = i18next.t('button.submit');
+    submitSpinner.style.display = 'none';
+  }
 
-      break;
-    case 'request':
-      if (state.processingRequest === true) {
-        submit.disabled = true;
-        submitText.textContent = i18next.t('button.loading');
-        submitSpinner.removeAttribute('style');
-      } else {
-        submit.disabled = false;
-        submitText.textContent = i18next.t('button.submit');
-        submitSpinner.style.display = 'none';
-      }
-
-      break;
-    case 'url':
-      if (state.isValidUrl === false) {
-        input.classList.add('is-invalid');
-      } else {
-        input.classList.remove('is-invalid');
-      }
-
-      break;
-    default:
-      throw new Error(`Unknown key - ${key}`);
+  if (state.form.state === 'sending') {
+    input.disabled = true;
+    submit.disabled = true;
+    submitText.textContent = i18next.t('button.loading');
+    submitSpinner.removeAttribute('style');
   }
 };
