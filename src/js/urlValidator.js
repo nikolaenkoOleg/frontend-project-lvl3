@@ -1,21 +1,36 @@
-const { string, object } = require('yup');
+const yup = require('yup');
 
 export default (url, state) => {
-  const schema = object().shape({
-    url: string().url(),
+  const pool = state.feeds.map((item) => item.url);
+
+  yup.addMethod(yup.string, 'noDouble', function (urls, message) {
+    return this.test('noDouble', message, (value) => !urls.includes(value));
   });
 
-  const pool = state.feeds.map((item) => item.url);
-  if (pool.includes(url)) {
-    const promise = new Promise((resolve) => {
-      const valid = false;
-      const key = 'errors.duplicateUrlError';
+  const schema = yup.object().shape({
+    url: yup.string().url().noDouble(pool, 'doubleUrl'),
+  });
 
-      resolve({ valid, key });
-    });
+  yup.setLocale({
+    mixed: {
+      default: 'Não é válido',
+    },
+    number: {
+      min: 'Deve ser maior que ${min}',
+    },
+  });
 
-    return promise;
-  }
+  // now use Yup schemas AFTER you defined your custom dictionary
+  let schema2 = yup.object().shape({
+    name: yup.string(),
+    age: yup.number().min(18),
+  });
+
+  schema2.validate({ name: 'jimmy', age: 11 }).catch(function(err) {
+    console.log(err.name, err.errors);
+    // err.name; // => 'ValidationError'
+    // err.errors; // => ['Deve ser maior que 18']
+  });
 
   return schema
     .isValid({
