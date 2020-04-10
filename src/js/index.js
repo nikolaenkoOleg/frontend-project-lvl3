@@ -39,14 +39,11 @@ input.addEventListener('input', () => {
   const url = input.value;
 
   isValid(url, state)
-    .then(({ valid, key }) => {
-      if (valid) {
-        state.form.validation = 'valid';
-        state.form.error.validationError = null;
-      } else {
-        state.form.validation = 'invalid';
-        state.form.error.validationError = key;
-      }
+    .then(() => {
+      state.form.validation = 'valid';
+    })
+    .catch((err) => {
+      console.log(err);
     });
 });
 
