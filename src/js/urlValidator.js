@@ -1,26 +1,17 @@
 const yup = require('yup');
 
-export default (url, state) => {
-  const pool = state.feeds.map((item) => item.url);
-
-  yup.addMethod(yup.string, 'noDouble', function (urls, message) {
-    return this.test('noDouble', message, (value) => {
-      const { path, createError } = this;
-      if (!urls.includes(value)) {
-        return true;
-      }
-
-      return createError({ path, message: 'dwdsd' });
-    });
-  });
+export default (state) => {
+  const { url } = state.form.data;
+  const urls = state.feeds.map((item) => item.url);
 
   const validation = yup.object().shape({
-    url: yup.string().url('errors.incorrectUrlError').noDouble(pool, 'erros.duplicateUrlError'),
+    url: yup
+      .string()
+      .url('errors.incorrectUrlError')
+      .notOneOf(urls, 'errors.duplicateUrlError'),
   });
 
   return validation.validate({ url })
     .then((valid) => valid)
-    .catch((err) => {
-      console.log('err', err.errors);
-    });
+    .catch((err) => Promise.reject(err.errors[0]));
 };
