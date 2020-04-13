@@ -10,22 +10,14 @@ const watchForm = (state) => {
 };
 
 const watchData = (state) => {
-  watch(state, 'feeds', () => {
-    renderContent(state);
-  });
-
-  watch(state, 'posts', () => {
+  watch(state, ['feeds', 'posts'], () => {
     renderContent(state);
   });
 };
 
 const watchErrors = (state) => {
-  watch(state.form.error, 'validationError', () => {
-    renderError(state, 'validationError');
-  });
-
-  watch(state.form.error, 'requestError', () => {
-    renderError(state, 'requestError');
+  watch(state.form.errors, ['validation', 'request'], () => {
+    renderError(state);
   });
 };
 

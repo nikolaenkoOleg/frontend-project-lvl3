@@ -17,12 +17,14 @@ const input = document.querySelector('#input-url');
 
 const state = {
   form: {
-    error: {
-      validationError: null,
-      requestError: null,
-    },
     state: 'active',
-    validation: 'valid',
+    data: {
+      url: '',
+    },
+    errors: {
+      validation: null,
+      request: null,
+    },
   },
   feeds: [],
   posts: [],
@@ -36,14 +38,16 @@ i18next.init({
 });
 
 input.addEventListener('input', () => {
-  const url = input.value;
+  state.form.data.url = input.value;
 
-  isValid(url, state)
+  isValid(state)
     .then(() => {
       state.form.validation = 'valid';
+      state.form.errors.validation = '';
     })
     .catch((err) => {
-      console.log(err);
+      state.form.validation = 'invalid';
+      state.form.errors.validation = err;
     });
 });
 
@@ -105,7 +109,7 @@ const listener = (rssUrl) => {
     })
     .catch(() => {
       delay *= 2;
-      state.form.error.requestError = 'errors.requestError';
+      state.form.errors.request = 'errors.requestError';
       state.form.state = 'active';
     });
 
