@@ -86,34 +86,34 @@ const getContent = (data, url) => {
   return { feed, posts };
 };
 
-let delay = 5000;
-const listener = (rssUrl) => {
-  loadRss(rssUrl)
+const fillStateWithContent = (content) => {
+  const { feed, posts } = content;
+  const stateFeedsIds = state.feeds.map((item) => item.id);
+
+  if (!stateFeedsIds.includes(feed.id)) {
+    state.feeds.push(feed);
+  }
+  const statePostIds = state.posts.map((post) => post.id);
+
+  posts.forEach((post) => {
+    if (!statePostIds.includes(post.id)) {
+      state.posts.push(post);
+    }
+  });
+};
+
+const updateFeed = (url, time) => {
+  let delay = time;
+  loadRss(url)
     .then((rss) => {
-      state.form.state = 'active';
-      const { feed, posts } = getContent(rss, rssUrl);
-
-      const feedId = feed.id;
-      const stateFeedsIds = state.feeds.map((item) => item.id);
-
-      if (!stateFeedsIds.includes(feedId)) {
-        state.feeds.push(feed);
-      }
-      const statePostIds = state.posts.map((item) => item.id);
-
-      posts.forEach((post) => {
-        if (!statePostIds.includes(post.id)) {
-          state.posts.push(post);
-        }
-      });
+      const content = getContent(rss, url);
+      fillStateWithContent(content);
     })
     .catch(() => {
       delay *= 2;
-      state.form.errors.request = 'errors.requestError';
-      state.form.state = 'active';
     });
 
-  setTimeout(listener, delay, rssUrl);
+  setTimeout(updateFeed, 5000, url, delay);
 };
 
 form.addEventListener('submit', (e) => {
@@ -121,7 +121,18 @@ form.addEventListener('submit', (e) => {
   const url = input.value;
   state.form.state = 'sending';
 
-  listener(url);
+  loadRss(url)
+    .then((rss) => {
+      const content = getContent(rss, url);
+      fillStateWithContent(content);
+      state.form.state = 'finished';
+
+      updateFeed(url, 5000);
+    })
+    .catch(() => {
+      state.form.errors.request = 'errors.requestError';
+      state.form.state = 'active';
+    });
 });
 
 

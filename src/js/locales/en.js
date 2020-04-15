@@ -9,5 +9,6 @@ export default {
       submit: 'Submit',
       loading: 'Loading',
     },
+    finished: 'rss has beed loaded!',
   },
 };
