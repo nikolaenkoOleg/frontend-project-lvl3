@@ -6,12 +6,17 @@ export default (state) => {
   const submitText = document.querySelector('.button-text');
   const submitSpinner = document.querySelector('.button-spinner');
   const feedback = document.querySelector('.feedback');
+  const requestErrorBlock = document.querySelector('.error_block');
+  const requestErrorContent = document.querySelector('.alert-content');
 
   if (state.form.state === 'active') {
     input.disabled = false;
     submit.disabled = false;
     submitText.textContent = i18next.t('button.submit');
     submitSpinner.style.display = 'none';
+
+    requestErrorContent.textContent = '';
+    requestErrorBlock.style.display = 'none';
   }
 
   if (state.form.state === 'sending') {
@@ -19,6 +24,20 @@ export default (state) => {
     submit.disabled = true;
     submitText.textContent = i18next.t('button.loading');
     submitSpinner.removeAttribute('style');
+  }
+
+  if (state.form.state === 'failed') {
+    const errorText = i18next.t(state.form.errors.request);
+
+    submit.disabled = false;
+    submitText.textContent = i18next.t('button.submit');
+    submitSpinner.style.display = 'none';
+
+    input.value = '';
+    input.disabled = false;
+
+    requestErrorContent.prepend(errorText);
+    requestErrorBlock.style.display = 'block';
   }
 
   if (state.form.state === 'finished') {

@@ -6,6 +6,7 @@ export default (url) => {
   const validation = yup.object().shape({
     url: yup
       .string()
+      .required('errors.requiredUrlError')
       .url('errors.incorrectUrlError')
       .notOneOf(urls, 'errors.duplicateUrlError'),
   });
@@ -17,6 +18,7 @@ export default (url) => {
     })
     .catch((err) => {
       const errorKey = err.errors[0];
-      return errorKey;
+
+      return Promise.reject(errorKey);
     });
 };

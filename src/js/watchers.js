@@ -1,7 +1,7 @@
 import { watch } from 'melanke-watchjs';
 import renderForm from './renderers/formRender';
 import renderContent from './renderers/contentRender';
-import renderError from './renderers/errorsRender';
+import renderValidation from './renderers/validationRender';
 
 const watchForm = (state) => {
   watch(state.form, 'state', () => {
@@ -15,14 +15,14 @@ const watchData = (state) => {
   });
 };
 
-const watchErrors = (state) => {
-  watch(state.form.errors, ['validation', 'request'], () => {
-    renderError(state);
+const watchValidation = (state) => {
+  watch(state.form.errors, 'validation', () => {
+    renderValidation(state);
   });
 };
 
 export {
   watchForm,
   watchData,
-  watchErrors,
+  watchValidation,
 };
