@@ -3,13 +3,12 @@ export default (state) => {
   const postsList = document.querySelector('.posts');
   const input = document.querySelector('#input-url');
   const { feeds, posts } = state;
-
   input.value = '';
   feedList.innerHTML = '';
   postsList.innerHTML = '';
 
   feeds.forEach((item) => {
-    const { title, description } = item;
+    const { feedTitle, feedDescription } = item;
 
     const feedItem = document.createElement('a');
     feedItem.classList.add('list-group-item', 'list-group-item-action');
@@ -17,29 +16,31 @@ export default (state) => {
     const titleBlock = document.createElement('div');
     titleBlock.classList.add('d-flex', 'w-100', 'justify-content-between');
 
-    const feedTitle = document.createElement('h5');
-    feedTitle.classList.add('mb-1');
-    feedTitle.textContent = title;
+    const title = document.createElement('h5');
+    title.classList.add('mb-1');
+    title.textContent = feedTitle;
 
-    const feedDescription = document.createElement('p');
-    feedDescription.classList.add('mb-1');
-    feedDescription.textContent = description;
+    const description = document.createElement('p');
+    description.classList.add('mb-1');
+    description.textContent = feedDescription;
 
-    titleBlock.append(feedTitle);
+    titleBlock.append(title);
     feedItem.append(titleBlock);
-    feedItem.append(feedDescription);
+    feedItem.append(description);
+
     feedList.append(feedItem);
   });
 
   posts.forEach((post) => {
-    const { postUrl, postTitle } = post;
+    console.log(post);
+    const { link, title } = post;
 
     const postItem = document.createElement('li');
     postItem.classList.add('list-group-item', 'post');
 
     const postLink = document.createElement('a');
-    postLink.href = postUrl;
-    postLink.textContent = postTitle;
+    postLink.href = link;
+    postLink.textContent = title;
     postItem.append(postLink);
     postsList.append(postItem);
   });

@@ -48,37 +48,32 @@ input.addEventListener('input', () => {
     });
 });
 
-const getContent = (data, url) => {
-  const {
-    name,
-    description,
-    postsLinks,
-    postsTitles,
-  } = parseRss(data);
+const getContent = (rss, url) => {
+  const doc = parseRss(rss);
+  const feedTitle = doc.querySelector('title').textContent;
+  const feedDescription = doc.querySelector('description').textContent;
+  const feedPosts = doc.querySelectorAll('item');
 
-  const currentFeedId = Math.abs(crc32.str(name));
+  const currentFeedId = Math.abs(crc32.str(feedTitle));
   const feed = {
     id: currentFeedId,
     url,
-    title: name,
-    description,
+    feedTitle,
+    feedDescription,
   };
 
-  const postsCount = postsTitles.length;
-  const posts = [];
-  for (let i = 0; i < postsCount; i += 1) {
-    const postTitle = postsTitles[i];
-    const postUrl = postsLinks[i];
+  const posts = [...feedPosts].reduce((acc, post) => {
+    const link = post.querySelector('link').textContent;
+    const title = post.querySelector('title').textContent;
+    const id = Math.abs(crc32.str(title));
 
-    const post = {
-      id: Math.abs(crc32.str(postTitle)),
+    return [...acc, {
+      id,
       feedId: currentFeedId,
-      postUrl,
-      postTitle,
-    };
-
-    posts.push(post);
-  }
+      link,
+      title,
+    }];
+  }, []);
 
   return { feed, posts };
 };
