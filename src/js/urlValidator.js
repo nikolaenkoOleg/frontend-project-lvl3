@@ -15,5 +15,8 @@ export default (url) => {
       urls.push(url);
       return valid;
     })
-    .catch((err) => Promise.reject(err.errors[0]));
+    .catch((err) => {
+      const errorKey = err.errors[0];
+      return errorKey;
+    });
 };
