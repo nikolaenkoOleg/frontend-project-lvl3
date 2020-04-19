@@ -18,9 +18,6 @@ const input = document.querySelector('#input-url');
 const state = {
   form: {
     state: 'active',
-    data: {
-      url: '',
-    },
     errors: {
       validation: null,
       request: null,
@@ -38,9 +35,9 @@ i18next.init({
 });
 
 input.addEventListener('input', () => {
-  state.form.data.url = input.value;
+  const url = input.value;
 
-  isValid(state)
+  isValid(url)
     .then(() => {
       state.form.validation = 'valid';
       state.form.errors.validation = '';

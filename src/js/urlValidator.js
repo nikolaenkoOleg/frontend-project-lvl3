@@ -1,9 +1,8 @@
 const yup = require('yup');
 
-export default (state) => {
-  const { url } = state.form.data;
-  const urls = state.feeds.map((item) => item.url);
+const urls = [];
 
+export default (url) => {
   const validation = yup.object().shape({
     url: yup
       .string()
@@ -12,6 +11,9 @@ export default (state) => {
   });
 
   return validation.validate({ url })
-    .then((valid) => valid)
+    .then((valid) => {
+      urls.push(url);
+      return valid;
+    })
     .catch((err) => Promise.reject(err.errors[0]));
 };
