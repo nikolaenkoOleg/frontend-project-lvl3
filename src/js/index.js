@@ -106,8 +106,9 @@ const main = () => {
 
   input.addEventListener('input', () => {
     const url = input.value;
+    const currentUrls = state.feeds.map((feed) => feed.url);
 
-    isValid(url)
+    isValid(url, currentUrls)
       .then(() => {
         state.form.validationState = 'valid';
         state.form.errors.validation = '';

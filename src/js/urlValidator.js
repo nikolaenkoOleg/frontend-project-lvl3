@@ -1,8 +1,6 @@
-const yup = require('yup');
+import * as yup from 'yup';
 
-const urls = [];
-
-export default (url) => {
+export default (url, urls) => {
   const validation = yup.object().shape({
     url: yup
       .string()
