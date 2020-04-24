@@ -32,7 +32,6 @@ export default (state) => {
   });
 
   posts.forEach((post) => {
-    console.log(post);
     const { link, title } = post;
 
     const postItem = document.createElement('li');
