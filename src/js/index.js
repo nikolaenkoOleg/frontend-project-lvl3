@@ -3,6 +3,7 @@ import i18next from 'i18next';
 import crc32 from 'crc-32';
 import axios from 'axios';
 import _ from 'lodash';
+import retry from 'async-retry';
 
 import parseRss from './rssParser';
 import isValid from './urlValidator';
@@ -87,15 +88,17 @@ const main = () => {
   };
 
   const updateFeed = (url, time) => {
-    let delay = time;
-    axios.get(url)
-      .then((response) => {
-        const content = getContent(response.data, url);
-        fillStateWithContent(content);
-      })
-      .catch(() => {
-        delay *= 2;
-      });
+    const delay = time;
+
+    retry(() => {
+      axios.get(url)
+        .then((response) => {
+          const content = getContent(response.data, url);
+          fillStateWithContent(content);
+        });
+    }, {
+      minTimeout: time,
+    });
 
     setTimeout(updateFeed, 5000, url, delay);
   };
