@@ -1,9 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import i18next from 'i18next';
 import crc32 from 'crc-32';
+import axios from 'axios';
+import _ from 'lodash';
 
 import parseRss from './rssParser';
-import loadRss from './rssLoader';
 import isValid from './urlValidator';
 import en from './locales/en';
 import {
@@ -69,25 +70,27 @@ const main = () => {
 
   const fillStateWithContent = (content) => {
     const { feed, posts } = content;
-    const stateFeedsIds = state.feeds.map((item) => item.id);
 
-    if (!stateFeedsIds.includes(feed.id)) {
-      state.feeds.push(feed);
+    const newFeeds = _.differenceBy([feed], state.feeds, 'id');
+    if (newFeeds.length > 0) {
+      newFeeds.forEach((item) => {
+        state.feeds.push(item);
+      });
     }
-    const statePostIds = state.posts.map((post) => post.id);
 
-    posts.forEach((post) => {
-      if (!statePostIds.includes(post.id)) {
-        state.posts.push(post);
-      }
-    });
+    const newPosts = _.differenceBy(posts, state.posts, 'id');
+    if (newPosts.length > 0) {
+      newPosts.forEach((item) => {
+        state.posts.push(item);
+      });
+    }
   };
 
   const updateFeed = (url, time) => {
     let delay = time;
-    loadRss(url)
-      .then((rss) => {
-        const content = getContent(rss, url);
+    axios.get(url)
+      .then((response) => {
+        const content = getContent(response.data, url);
         fillStateWithContent(content);
       })
       .catch(() => {
@@ -124,9 +127,9 @@ const main = () => {
     const url = input.value;
     state.form.state = 'sending';
 
-    loadRss(url)
-      .then((rss) => {
-        const content = getContent(rss, url);
+    axios.get(url)
+      .then((response) => {
+        const content = getContent(response.data, url);
         fillStateWithContent(content);
         state.form.state = 'finished';
 
