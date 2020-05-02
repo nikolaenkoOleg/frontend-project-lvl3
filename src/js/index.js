@@ -31,8 +31,8 @@ const main = () => {
       validationState: 'valid',
       state: 'active',
       errors: {
-        validation: null,
-        request: null,
+        validationError: null,
+        requestError: null,
       },
     },
     feeds: [],
@@ -106,7 +106,7 @@ const main = () => {
   closeBtn.addEventListener('click', (e) => {
     e.preventDefault();
 
-    state.form.errors.request = null;
+    state.form.errors.requestError = null;
     state.form.state = 'active';
   });
 
@@ -117,11 +117,11 @@ const main = () => {
     isValid(url, currentUrls)
       .then(() => {
         state.form.validationState = 'valid';
-        state.form.errors.validation = '';
+        state.form.errors.validationError = '';
       })
       .catch((err) => {
         state.form.validationState = 'invalid';
-        state.form.errors.validation = err;
+        state.form.errors.validationError = err;
       });
   });
 
@@ -140,7 +140,7 @@ const main = () => {
       })
       .catch(() => {
         state.form.state = 'failed';
-        state.form.errors.request = 'errors.requestError';
+        state.form.errors.requestError = 'errors.requestError';
       });
   });
 

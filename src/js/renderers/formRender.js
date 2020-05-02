@@ -27,7 +27,7 @@ export default (state) => {
   }
 
   if (state.form.state === 'failed') {
-    const errorText = i18next.t(state.form.errors.request);
+    const errorText = i18next.t(state.form.errors.requestError);
 
     submit.disabled = false;
     submitText.textContent = i18next.t('button.submit');

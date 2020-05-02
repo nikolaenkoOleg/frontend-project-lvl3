@@ -16,7 +16,7 @@ const watchData = (state) => {
 };
 
 const watchValidation = (state) => {
-  watch(state.form.errors, 'validation', () => {
+  watch(state.form.errors, 'validationError', () => {
     renderValidation(state);
   });
 };

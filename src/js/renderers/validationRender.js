@@ -6,7 +6,7 @@ export default (state) => {
   const submit = document.querySelector('button[type="submit"]');
 
   if (state.form.validationState === 'invalid') {
-    validationUrlFeedbackBlock.textContent = i18next.t(state.form.errors.validation);
+    validationUrlFeedbackBlock.textContent = i18next.t(state.form.errors.validationError);
     validationUrlFeedbackBlock.style.display = 'block';
     validationUrlFeedbackBlock.classList.add('invalid-feedback');
     input.classList.add('is-invalid');
