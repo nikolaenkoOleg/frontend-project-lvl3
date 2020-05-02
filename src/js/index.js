@@ -40,10 +40,10 @@ const main = () => {
   };
 
   const getContent = (rss, url) => {
-    const doc = parseRss(rss);
-    const feedTitle = doc.querySelector('title').textContent;
-    const feedDescription = doc.querySelector('description').textContent;
-    const feedPosts = doc.querySelectorAll('item');
+    const parsedRss = parseRss(rss);
+    const feedTitle = parsedRss.title;
+    const feedDescription = parsedRss.description;
+    const feedPosts = parsedRss.posts;
 
     const currentFeedId = Math.abs(crc32.str(feedTitle));
     const feed = {
@@ -54,8 +54,7 @@ const main = () => {
     };
 
     const posts = [...feedPosts].reduce((acc, post) => {
-      const link = post.querySelector('link').textContent;
-      const title = post.querySelector('title').textContent;
+      const { title, link } = post;
       const id = Math.abs(crc32.str(title));
 
       return [...acc, {
