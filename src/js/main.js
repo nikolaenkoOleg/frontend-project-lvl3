@@ -21,7 +21,7 @@ i18next.init({
   },
 });
 
-const main = () => {
+export default () => {
   const form = document.querySelector('form');
   const input = document.querySelector('#input-url');
   const closeBtn = document.querySelector('.close');
@@ -147,8 +147,6 @@ const main = () => {
   watchData(state);
   watchValidation(state);
 };
-
-main();
 
 
 // https://cors-anywhere.herokuapp.com/rss.cnn.com/rss/cnn_topstories.rss
