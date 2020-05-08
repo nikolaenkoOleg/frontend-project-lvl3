@@ -10,10 +10,7 @@ export default (url, urls) => {
   });
 
   return validation.validate({ url })
-    .then((valid) => {
-      urls.push(url);
-      return valid;
-    })
+    .then((valid) => valid)
     .catch((err) => {
       const errorKey = err.errors[0];
 

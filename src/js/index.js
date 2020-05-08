@@ -2,26 +2,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import i18next from 'i18next';
 import crc32 from 'crc-32';
 import axios from 'axios';
-import _ from 'lodash';
 import retry from 'async-retry';
+import _ from 'lodash';
 
 import parseRss from './rssParser';
 import isValid from './urlValidator';
 import en from './locales/en';
-import {
-  watchForm,
-  watchData,
-  watchValidation,
-} from './watchers';
-
-i18next.init({
-  lng: 'en',
-  resources: {
-    en,
-  },
-});
+import watch from './watchers';
 
 export default () => {
+  i18next.init({
+    lng: 'en',
+    resources: {
+      en,
+    },
+  });
+
   const form = document.querySelector('form');
   const input = document.querySelector('#input-url');
   const closeBtn = document.querySelector('.close');
@@ -39,12 +35,7 @@ export default () => {
     posts: [],
   };
 
-  const getContent = (rss, url) => {
-    const parsedRss = parseRss(rss);
-    const feedTitle = parsedRss.title;
-    const feedDescription = parsedRss.description;
-    const feedPosts = parsedRss.posts;
-
+  const getContent = ({ feedTitle, feedDescription, feedPosts }, url) => {
     const currentFeedId = Math.abs(crc32.str(feedTitle));
     const feed = {
       id: currentFeedId,
@@ -53,17 +44,17 @@ export default () => {
       feedDescription,
     };
 
-    const posts = [...feedPosts].reduce((acc, post) => {
+    const posts = feedPosts.map((post) => {
       const { title, link } = post;
       const id = Math.abs(crc32.str(title));
 
-      return [...acc, {
+      return {
         id,
         feedId: currentFeedId,
         link,
         title,
-      }];
-    }, []);
+      };
+    });
 
     return { feed, posts };
   };
@@ -72,18 +63,15 @@ export default () => {
     const { feed, posts } = content;
 
     const newFeeds = _.differenceBy([feed], state.feeds, 'id');
-    if (newFeeds.length > 0) {
-      newFeeds.forEach((item) => {
-        state.feeds.push(item);
-      });
-    }
+    newFeeds.forEach((item) => {
+      state.feeds.push(item);
+    });
+
 
     const newPosts = _.differenceBy(posts, state.posts, 'id');
-    if (newPosts.length > 0) {
-      newPosts.forEach((item) => {
-        state.posts.push(item);
-      });
-    }
+    newPosts.forEach((item) => {
+      state.posts.push(item);
+    });
   };
 
   const updateFeed = (url, time) => {
@@ -92,7 +80,8 @@ export default () => {
     retry(() => {
       axios.get(url)
         .then((response) => {
-          const content = getContent(response.data, url);
+          const parsedRss = parseRss(response.data);
+          const content = getContent(parsedRss, url);
           fillStateWithContent(content);
         });
     }, {
@@ -131,7 +120,8 @@ export default () => {
 
     axios.get(url)
       .then((response) => {
-        const content = getContent(response.data, url);
+        const parsedRss = parseRss(response.data);
+        const content = getContent(parsedRss, url);
         fillStateWithContent(content);
         state.form.state = 'finished';
 
@@ -143,9 +133,7 @@ export default () => {
       });
   });
 
-  watchForm(state);
-  watchData(state);
-  watchValidation(state);
+  watch(state);
 };
 
 

@@ -21,8 +21,8 @@ const watchValidation = (state) => {
   });
 };
 
-export {
-  watchForm,
-  watchData,
-  watchValidation,
+export default (state) => {
+  watchForm(state);
+  watchData(state);
+  watchValidation(state);
 };

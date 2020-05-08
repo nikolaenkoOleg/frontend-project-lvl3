@@ -1,3 +1,3 @@
-import main from '../main';
+import run from '../index';
 
-main();
+run();
