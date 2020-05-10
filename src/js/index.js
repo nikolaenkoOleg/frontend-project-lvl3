@@ -35,7 +35,11 @@ export default () => {
     posts: [],
   };
 
-  const getContent = ({ feedTitle, feedDescription, feedPosts }, url) => {
+  const getContent = (parsedRss, url) => {
+    const feedTitle = parsedRss.title;
+    const feedDescription = parsedRss.description;
+    const feedPosts = parsedRss.posts;
+
     const currentFeedId = Math.abs(crc32.str(feedTitle));
     const feed = {
       id: currentFeedId,
@@ -109,7 +113,9 @@ export default () => {
       })
       .catch((err) => {
         state.form.validationState = 'invalid';
-        state.form.errors.validationError = err;
+
+        const errorKey = err.errors[0];
+        state.form.errors.validationError = errorKey;
       });
   });
 
