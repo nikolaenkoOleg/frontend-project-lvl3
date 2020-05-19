@@ -27,5 +27,5 @@ make develop
 make build
 ```
 
-### URL
+### project url
 https://rss-loader.now.sh/
