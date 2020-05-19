@@ -2,7 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import i18next from 'i18next';
 import crc32 from 'crc-32';
 import axios from 'axios';
-import retry from 'async-retry';
+// import retry from 'async-retry';
+import axiosRetry from 'axios-retry';
 import _ from 'lodash';
 
 import parseRss from './rssParser';
@@ -78,21 +79,18 @@ export default () => {
     });
   };
 
-  const updateFeed = (url, time) => {
-    const delay = time;
+  const updateFeed = (url) => {
+    axiosRetry(axios, { retries: 5 });
 
-    retry(() => {
-      axios.get(url)
-        .then((response) => {
-          const parsedRss = parseRss(response.data);
-          const content = getContent(parsedRss, url);
-          fillStateWithContent(content);
-        });
-    }, {
-      minTimeout: time,
-    });
+    const promise = axios.get(url)
+      .then(() => setTimeout(updateFeed, 5000, url))
+      .catch((err) => {
+        setTimeout(updateFeed, 5000, url);
+        return Promise.reject(err);
+      });
 
-    setTimeout(updateFeed, 5000, url, delay);
+    console.log(promise);
+    return promise;
   };
 
   closeBtn.addEventListener('click', (e) => {
@@ -130,8 +128,9 @@ export default () => {
         const content = getContent(parsedRss, url);
         fillStateWithContent(content);
         state.form.state = 'finished';
-
-        updateFeed(url, 5000);
+      })
+      .then(() => {
+        updateFeed(url).catch((err) => console.log('errooooor', err));
       })
       .catch(() => {
         state.form.state = 'failed';
