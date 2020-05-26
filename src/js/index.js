@@ -6,7 +6,7 @@ import axiosRetry from 'axios-retry';
 import _ from 'lodash';
 
 import parseRss from './rssParser';
-import isValid from './urlValidator';
+import validate from './urlValidator';
 import en from './locales/en';
 import watch from './watchers';
 
@@ -67,14 +67,10 @@ export default () => {
     const { feed, posts } = content;
 
     const newFeeds = _.differenceBy([feed], state.feeds, 'id');
-    newFeeds.forEach((item) => {
-      state.feeds.push(item);
-    });
+    state.feeds.push(...newFeeds);
 
     const newPosts = _.differenceBy(posts, state.posts, 'id');
-    newPosts.forEach((item) => {
-      state.posts.push(item);
-    });
+    state.posts.push(...newPosts);
   };
 
   const updateFeed = (url) => {
@@ -86,13 +82,10 @@ export default () => {
         const content = getContent(parsedRss, url);
         fillStateWithContent(content);
 
-        setTimeout(updateFeed, 5000, url);
         return true;
       })
-      .catch((err) => {
-        setTimeout(updateFeed, 5000, url);
-        return Promise.reject(err);
-      });
+      .catch((err) => Promise.reject(err))
+      .finally(() => setTimeout(updateFeed, 5000, url));
   };
 
   closeBtn.addEventListener('click', (e) => {
@@ -106,7 +99,7 @@ export default () => {
     const url = input.value;
     const currentUrls = state.feeds.map((feed) => feed.url);
 
-    isValid(url, currentUrls)
+    validate(url, currentUrls)
       .then(() => {
         state.form.validationState = 'valid';
         state.form.errors.validationError = '';
