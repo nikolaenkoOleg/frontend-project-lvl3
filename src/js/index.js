@@ -3,6 +3,7 @@ import i18next from 'i18next';
 import crc32 from 'crc-32';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
+import { setLocale } from 'yup';
 import _ from 'lodash';
 
 import parseRss from './rssParser';
@@ -11,6 +12,16 @@ import en from './locales/en';
 import watch from './watchers';
 
 export default () => {
+  setLocale({
+    mixed: {
+      notOneOf: 'errors.duplicateUrlError',
+      required: 'errors.requiredUrlError',
+    },
+    string: {
+      url: 'errors.incorrectUrlError',
+    },
+  });
+
   i18next.init({
     lng: 'en',
     resources: {
