@@ -4,28 +4,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RSS agregator</title>
+  <title>RSS Reader</title>
 </head>
 
 <body>
   <div class="jumbotron">
     <div class="container">
-      <div class="row">
-        <form action="#" class="col-12">
-          <div class="form-group">
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" id="input-url" placeholder="Enter rss-url" required>
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                  <span class="spinner-border spinner-border-sm button-spinner" style="display: none;"></span>
-                  <p class="button-text" style="margin: 0; display: inline;">Submit</p>
-                </button>
-              </div>
-            </div>
-            <small class="feedback" style="display: none"></small>
-          </div>
-        </form>
+      <h1>RSS Reader</h1>
+      <div class="alert alert-secondary" role="alert">
+        <p>Test urls:</p>
+        <p class="text-muted">https://cors-anywhere.herokuapp.com/rss.cnn.com/rss/cnn_topstories.rss</p>
+        <p class="text-muted">https://cors-anywhere.herokuapp.com/lorem-rss.herokuapp.com/feed?unit=second&interval=1</p>
       </div>
+      <form>
+        <div class="form-group">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="input-url" placeholder="Enter rss-url" required>
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="submit">
+                <span class="spinner-border spinner-border-sm button-spinner" style="display: none;"></span>
+                <p class="button-text" style="margin: 0; display: inline;">Submit</p>
+              </button>
+            </div>
+          </div>
+          <small class="feedback" style="display: none"></small>
+        </div>
+      </form>
       <div class="row">
         <div class="col-4 m-auto">
           <div class="error_block" style="display: none">
