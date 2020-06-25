@@ -84,19 +84,17 @@ export default () => {
     state.posts.push(...newPosts);
   };
 
-  const updateFeed = (url) => {
+  const updateFeed = async (url) => {
     axiosRetry(axios, { retries: 5, retryDelay: axiosRetry.exponentialDelay });
 
-    return axios.get(url)
-      .then((response) => {
-        const parsedRss = parseRss(response.data);
-        const content = getContent(parsedRss, url);
-        fillStateWithContent(content);
-
-        return true;
-      })
-      .catch((err) => Promise.reject(err))
-      .finally(() => setTimeout(updateFeed, 5000, url));
+    try {
+      const response = await axios.get(url);
+      const parsedRss = parseRss(response.data);
+      const content = getContent(parsedRss, url);
+      fillStateWithContent(content);
+    } finally {
+      setTimeout(updateFeed, 5000, url);
+    }
   };
 
   closeBtn.addEventListener('click', (e) => {
@@ -106,42 +104,42 @@ export default () => {
     state.form.state = 'active';
   });
 
-  input.addEventListener('input', () => {
+  input.addEventListener('input', async () => {
     const url = input.value;
     const currentUrls = state.feeds.map((feed) => feed.url);
 
-    validate(url, currentUrls)
-      .then(() => {
-        state.form.validationState = 'valid';
-        state.form.errors.validationError = '';
-      })
-      .catch((err) => {
-        state.form.validationState = 'invalid';
+    const validationResponse = await validate(url, currentUrls);
 
-        const errorKey = err.errors[0];
-        state.form.errors.validationError = errorKey;
-      });
+    if (validationResponse.type === 'error') {
+      state.form.validationState = 'invalid';
+
+      const errorKey = validationResponse.errorKeys[0];
+      state.form.errors.validationError = errorKey;
+    } else {
+      state.form.validationState = 'valid';
+      state.form.errors.validationError = '';
+    }
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const url = input.value;
     state.form.state = 'sending';
 
-    axios.get(url)
-      .then((response) => {
-        const parsedRss = parseRss(response.data);
-        const content = getContent(parsedRss, url);
-        fillStateWithContent(content);
-        state.form.state = 'finished';
-      })
-      .then(() => {
-        updateFeed(url);
-      })
-      .catch(() => {
-        state.form.state = 'failed';
-        state.form.errors.requestError = 'errors.requestError';
-      });
+    try {
+      const response = await axios.get(url);
+
+      const parsedRss = parseRss(response.data);
+      const content = getContent(parsedRss, url);
+
+      fillStateWithContent(content);
+      state.form.state = 'finished';
+
+      updateFeed(url);
+    } catch {
+      state.form.state = 'failed';
+      state.form.errors.requestError = 'errors.requestError';
+    }
   });
 
   watch(state);

@@ -9,5 +9,5 @@ export default (url, urls) => {
       .notOneOf(urls),
   });
 
-  return validation.validate({ url });
+  return validation.validate({ url }).catch((err) => ({ type: 'error', errorKeys: err.errors }));
 };
