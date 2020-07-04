@@ -31,4 +31,4 @@ make build
 ```
 
 ### URL
-https://rss-loader.now.sh/
+https://rss-loader.nikolaenkooleg.now.sh/
