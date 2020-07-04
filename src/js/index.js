@@ -144,7 +144,3 @@ export default () => {
 
   watch(state);
 };
-
-
-// https://cors-anywhere.herokuapp.com/rss.cnn.com/rss/cnn_topstories.rss
-// https://cors-anywhere.herokuapp.com/lorem-rss.herokuapp.com/feed?unit=second&interval=1
